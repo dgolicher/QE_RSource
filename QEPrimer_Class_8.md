@@ -13,7 +13,7 @@
 *  Links between correlation and causation
 *  Methods that look at multiple correlations
 
-So far we have looked at differences between groups. However we are often likely to be interested in the way two numeric variables change together. There are many types of analyses that address this. In ecology we are often most interested in the functional form of the relationship between two variables. For example we may want to look in detail at how the feeding rate of waders depends on the density of invertebrates.
+So far we have looked at differences between groups. However we are often likely to be interested in the way two numeric variables change together. There are many types of analyses that address this. In ecology we are often most interested in the functional form of the relationship between two variables. For example we may want to look in detail at how the feeding rate of waders depends on the density of invertebrates. 
 
 The most basic question we can ask about a relationship between two variables is simply ``does a relationship exist?'' This is hypothesis testing. Simply establishing that there is a relationship is often not enough, but it is at least a starting point.
 
@@ -81,7 +81,8 @@ The strength of the relationship can be measured by calculating the correlation 
 
 The key to understanding how to calculate the correlation coefficient is understanding how we get a covariance. The covariance is the sum of the product of the deviations of x and y from their respective means divided by n-1.
 
-$cov(x,y)=\frac{1}{n-1}\sum(x-\bar{\bar{x})(y-y)}$
+
+$cov(x,y)=\frac{1}{n-1}\sum(x-{\bar{x})(y-\bar{y})}$
 
 Taking this step by step helps to understand the equation.
 
@@ -227,9 +228,10 @@ It is difficult to provide rules for deciding what is a large and small value fo
 
 If you have followed the account of hypothesis testing presented earlier you may have realised that obtaining a correlation coefficient is not enough. If the sample size is small then even moderate sized correlation coefficients may turn out to be due to chance. We can test how likely it would be to obtain a correlation coefficient as large (or larger) than the one we have under the null hypothesis by calculating a statistic and comparing its value to the known distribution for the statistic under the null hypothesis. One way of doing this is by calculating another version of the t statistic.
 
-$t=\frac{r}{\sqrt{(1-r\text{\texttwosuperior})/(N-2)}}$
 
-Notice that this formula includes the correlation coefficient (r) and the coefficient of determination (r\texttwosuperior{}) but also takes into account the sample size (N-2). The significance of the value is automatically looked up by R when you run the following command.
+$t=\frac{r}{\sqrt{(1-r^2)/(N-2)}}$
+
+Notice that this formula includes the correlation coefficient r and the coefficient of determination (r²) but also takes into account the sample size (N-2). The significance of the value is automatically looked up by R when you run the following command.
 
 
 

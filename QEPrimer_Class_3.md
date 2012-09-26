@@ -1,7 +1,6 @@
 # Class 3: Descriptive statistics
 
-
-## Introduction}
+## Introduction
 
 In this class you will start using R and SPSS for simple statistical analysis for the first time. Hopefully you will find that the material is mainly a refresher with regard to the key concepts. However it is worth working through the analyses, and in particular the exercises, in order to develop some practical skills with R and SPSS. The online tests on MyBU are based on these exercises and the data sets provided for them. So working through the exercises will enable you to complete the tests quickly.
 

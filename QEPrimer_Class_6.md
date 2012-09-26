@@ -1,11 +1,10 @@
-## Class 6: Non parametric tests}
+## Class 6: Non parametric tests
 
 **What you must remember before next term**
 
 *  The difference between the assumptions of parametric tests and non-parametric tests
 *  The use of ranks for non-parametric tests.
 *  How to run simple non parametric tests 
-
 
 **What you will look at in greater depth on the course**
 

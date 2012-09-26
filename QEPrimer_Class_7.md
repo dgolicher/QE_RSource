@@ -1,4 +1,4 @@
-# Class 7: Chi-squared tests of association}
+# Class 7: Chi-squared tests of association
 
 
 **What you must remember before next term**
