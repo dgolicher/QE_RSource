@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Class 5: Hypothesis testing</title>
+
+<base target="_blank"/>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+</head>
+
+<body>
+<h1>Class 5: Hypothesis testing</h1>
+
+<p>What you must remember before next term</p>
+
+<ul>
+<li> The difference between a null hypothesis and the working hypothesis</li>
+<li> The interpretation of a p-value</li>
+<li> The basic assumptions underlying parametric tests</li>
+</ul>
+
+<p>What you will look at in greater depth on the course</p>
+
+<ul>
+<li> The strengths and weaknesses of hypothesis testing</li>
+<li> A range of methods for hypothesis testing</li>
+<li> The relationship between test based approaches and model based approaches</li>
+<li> Choosing appropriate statistical analyses</li>
+<li> Running diagnostic tests of assumptions</li>
+</ul>
+
+<h2>Statistical hypothesis testing</h2>
+
+<p>Statistical hypothesis testing works like this.</p>
+
+<p>Given that the measurements that we obtain from nature tend to vary in a random, unexplainable manner it may be very easy to be fooled into thinking that patterns exist that are really just down to &ldquo;chance&#39;&#39;.</p>
+
+<p>We look for patterns in our data that would indicate something interesting, but we mistrust what we have found until we have ruled out the null hypothesis that the pattern could have occurred anyway simply as a result of random variation. </p>
+
+<h3>The unpaired t-test</h3>
+
+<p>For example, when using an unpaired t-test we are interested in the difference between the means for two groups. If you take a set of numbers with random variation and split them into two arbitrary groups the means will never be exactly the same. If you just calculate the two means and then report them in your dissertation, or paper, as representing a real difference between the groups (one that would be reproduced by another researcher following your methods) you would quite rightly be asked by any scientific referee to provide some justification that the difference you have found is not simply an artefact of the intrinsic variability in your data.</p>
+
+<p>So, in order to convince the sceptics, we set up a null hypothesis. The null hypothesis expresses the position that the difference could have arisen if the measurements were taken from the same population (an effect attributable to chance&#39;&#39;). We then calculate a statistic that takes into account both the size of the difference and the random variability in the measurements. We calculate how likely it would have been to have got this statistic (or one more extreme) if the null hypothesis were in fact true. We want to be able to say that it is not very likely in order to convince the sceptics. If this statistic falls in the tail of its probability distribution under the null hypothesis we know that is unlikely that we have got the data we have (or data even more extreme) if the null hypothesis were true. We therefore now are justified in suspecting that the null hypothesis is false and we can reject it. The probability of getting a statistic (or one even more extreme) is called a p-value. So in order to reject the null we need large positive or negative values for the statistic (t), and a <strong>small p-value</strong>. The critical p-value for rejecting the null is typically set at 0.05 (one chance in twenty of getting the result (or one more extreme) if nothing were really happening (H0 is true). There may be a lot more work to do in order to understand how and why the difference occurred and what it implies, but at least we can rule out chance.</p>
+
+<p>A t-test is one form of null hypothesis test that looks to establish whether there is a real difference between the means of two groups. The null hypothesis is that there is no difference between the means (the data could have been drawn from a single population).</p>
+
+<h3>The t-statistic</h3>
+
+<p>Our test of a null hypothesis is going to take into account all the following aspects.</p>
+
+<ul>
+<li> The differences between the means: Large differences are more likely to be detected easily.</li>
+<li> The size of the sample: Large samples are more likely to produce more reliable results.</li>
+<li> The intrinsic variability in the data: High variability will make it difficult to reproduce the results.</li>
+</ul>
+
+<p>Now, we have already seen that the standard error takes into account the last two elements that we want to include in our test Size of sample and intrinsic variability). So, the test statistic can be based on the number of standard errors by which the two sample means are separated. This will take into account the first element (differences between the means) as well. </p>
+
+<p>\( t=\frac{DifferenceBetweenMeans}{StandardErrorOfDifference}=\frac{\bar{x_{1}}-\bar{x_{2}}}{SE_{diff}} \)</p>
+
+<p>For two independent (i.e. non-correlated) variables, the variance of a difference is the sum of the separate variances. This important result allows us to write down the formula for the standard error of the difference between two sample means.</p>
+
+<p>\( SE_{diff}=\sqrt{\frac{s_{1}^{2}}{n_{1}}+}\frac{s_{2}^{2}}{n_{2}} \)</p>
+
+<p>Let&#39;s run through this step by step in R</p>
+
+<p>Again, you may need to load the data again and attach it.</p>
+
+<pre><code class="r">d &lt;- read.csv(&quot;http://tinyurl.com/QEcol2013/Mussels.csv&quot;)
+attach(d)
+</code></pre>
+
+<p>To extract the values of Lshell for two sites we use square brackets. This feature of the R language will be explained in more detail next term.</p>
+
+<pre><code class="r">Site1 &lt;- Lshell[Site == &quot;Site_1&quot;]
+Site2 &lt;- Lshell[Site == &quot;Site_2&quot;]
+</code></pre>
+
+<p>Now we can get the means as we did before.</p>
+
+<pre><code class="r">Mean1 &lt;- mean(Site1)
+Mean1
+</code></pre>
+
+<pre><code>## [1] 100.8
+</code></pre>
+
+<pre><code class="r">Mean2 &lt;- mean(Site2)
+Mean2
+</code></pre>
+
+<pre><code>## [1] 109.2
+</code></pre>
+
+<p>The lengths of the vectors give us the n values. R calculates the variances<br/>
+<em>The formula above uses the population variance as calculated with a denominator of n rather than n-1. Here we have ignored this in order to use R&#39;s defaults and keep it as simple as possible in order to demonstrate the principle behind the test. It will make a very minor difference when we compare the result to that produced by the software.</em></p>
+
+<pre><code class="r">N1 &lt;- length(Site1)
+N2 &lt;- length(Site2)
+Var1 &lt;- var(Site1)
+Var1
+</code></pre>
+
+<pre><code>## [1] 153.7
+</code></pre>
+
+<pre><code class="r">Var2 &lt;- var(Site2)
+Var2
+</code></pre>
+
+<pre><code>## [1] 196.1
+</code></pre>
+
+<p>We have what we need to calculate the standard error of the difference.</p>
+
+<pre><code class="r">SEdiff &lt;- sqrt(Var1/N1 + Var2/N2)
+SEdiff
+</code></pre>
+
+<pre><code>## [1] 3.709
+</code></pre>
+
+<p>And we can now find the value for t</p>
+
+<pre><code class="r">t &lt;- (Mean1 - Mean2)/SEdiff
+t
+</code></pre>
+
+<pre><code>## [1] -2.283
+</code></pre>
+
+<p>Finally we look up the p value. </p>
+
+<p>To do this we need the value of t and the degrees of freedom. The term degrees of freedom refers to the amount of independent replication in the study design. In this case the degrees of freedom are calculated by adding the two values of n. However we calculated a mean from each group. As a non technical rule of thumb we subtract a degree of freedom each time we calculate a mean. So, we have n1 plus n2 minus 2 degrees of freedom. We multiply the p value by two as we are carrying out a two tailed test. A one tailed test assumes that we are only interested in one side of the question (eg. H0 The mean for site 1 is not larger than the mean for site2). We rarely work with such hypotheses in ecology. In most practical cases we will choose a two tailed test. You should always use a two tailed test by default unless you can provide a very good reason not to.</p>
+
+<pre><code class="r">df &lt;- N1 + N2 - 2
+pval &lt;- 2 * pt(t, df)
+pval
+</code></pre>
+
+<pre><code>## [1] 0.02681
+</code></pre>
+
+<p>Of course we do never need to do all these calculations step by step unless we are trying to understand the logic as here. R does it for us with one command.</p>
+
+<pre><code class="r">t.test(Site1, Site2)
+</code></pre>
+
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  Site1 and Site2 
+## t = -2.283, df = 47.76, p-value = 0.02692
+## alternative hypothesis: true difference in means is not equal to 0 
+## 95 percent confidence interval:
+##  -15.924  -1.009 
+## sample estimates:
+## mean of x mean of y 
+##     100.8     109.2 
+## 
+</code></pre>
+
+<p>Notice that the p-value and degrees of freedom are slightly different to the ones that we got when working through the steps. This is because R has made a correction for the fact that the two variances were different. This is known as Welch&#39;s test. </p>
+
+<p>As this is the safest test to use, R uses it by default. Welch&#39;s correction is a good one. It makes the test more robust than the classical method we have just gone through step by step.</p>
+
+<h3>Interpretation of a p-value</h3>
+
+<p>So how do we interpret the result?</p>
+
+<p>We have a p-value of 0.0269. This is below 0.05, which is the traditional cut off point for statistical significance. So there is a less than one in twenty chance of having got this result (or one more extreme) if there really were no difference between the mean values of the two sites. In this case we can reject the null hypothesis and conclude that there is a significant difference in mean shell length(p&lt;0.05) between the two sites.</p>
+
+<p>But what about this case?</p>
+
+<pre><code class="r">Site3 &lt;- Lshell[Site == &quot;Site_3&quot;]
+t.test(Site1, Site3)
+</code></pre>
+
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  Site1 and Site3 
+## t = -0.6823, df = 8.175, p-value = 0.5139
+## alternative hypothesis: true difference in means is not equal to 0 
+## 95 percent confidence interval:
+##  -26.36  14.29 
+## sample estimates:
+## mean of x mean of y 
+##     100.8     106.8 
+## 
+</code></pre>
+
+<p>If a p-value is larger that the conventional cut-off (0.05) we can&#39;t reject the null hypothesis. You have to be careful here. The test does not really say that the mean values for the two sites are the same. It simply suggests that as things stand there is not enough evidence to claim that there is a real difference. If we increased the sample size in order to reduce the standard error we might still be able to show a significant difference. Absence of evidence is not evidence of absence&#39;&#39;.</p>
+
+<p>Notice that the variance for Site 3 is large compared to Sites 1 and 2.</p>
+
+<pre><code class="r">var(Site1)
+</code></pre>
+
+<pre><code>## [1] 153.7
+</code></pre>
+
+<pre><code class="r">var(Site3)
+</code></pre>
+
+<pre><code>## [1] 578.9
+</code></pre>
+
+<p>The larger the overall variability in measurements, the harder it will be to find significant differences.</p>
+
+<h4>Testing the assumption of normality</h4>
+
+<p>One of the assumptions of the t-test is that the observations within each group could have been taken from an approximately normal distribution. When working with large datasets minor violations of this assumption are not necessarily important. However major violations are almost always serious when we run simple tests on relatively small data sets (n&lt;30). </p>
+
+<p>As you gain more experience in data analysis it becomes possible to detect the gravity of a violation of normality easily using histograms and QQ-plots. However visual inspection works best with large data sets. When you are working with small data sets the assumption that the data could have been drawn from a normal distribution can be treated as a null hypothesis. A test of this hypothesis can therefore be used for diagnosis. If we have to reject the null hypothesis (p&lt;0.05) there is good evidence that one of the assumptions of the t test has not been met. We would therefore usually have to use an alternative statistical procedure. We can run tests of normality for each site using the Shapiro Wilks test.</p>
+
+<pre><code class="r">shapiro.test(Site1)
+</code></pre>
+
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  Site1 
+## W = 0.9807, p-value = 0.8888
+## 
+</code></pre>
+
+<pre><code class="r">shapiro.test(Site2)
+</code></pre>
+
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  Site2 
+## W = 0.9219, p-value = 0.05673
+## 
+</code></pre>
+
+<pre><code class="r">shapiro.test(Site3)
+</code></pre>
+
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  Site3 
+## W = 0.9037, p-value = 0.3115
+## 
+</code></pre>
+
+<p>So, in all these cases the p-value is greater than 0.05. We cannot reject the null hypothesis, therefore the tests provides no evidence to suggest that the assumption of normality is not met. There are some quite important caveats to this procedure that will be explained later on in the course. Used carefully these tests help to justify the choice of statistical method. </p>
+
+<h4>Testing for differences in variances</h4>
+
+<p>The traditional t test made the assumption that the variances in each group are the same. The contemporary procedure that R and other software adopts by default is known as Welch&#39;s test. This slight modification does not require variances to be the same. We can use a t-test safely even if the assumption of homogeneity of variance is not met providing Welch&#39;s procedure is followed. Reducing the number of assumptions we make when running a test is usually a good thing to do, providing that this does not affect the power of the test nor its interpretability. In this case it does not.</p>
+
+<p>We might still like to test whether the variances are significantly different. In R we can use a simple test based on the F ratio. SPSS uses another related procedure called the Levene&#39;s test which is included by default in the output%<br/>
+<em>Levene&#39;s test can be run in R using the car package, or the R Commander GUI</em></p>
+
+<pre><code class="r">var.test(Site1, Site3)
+</code></pre>
+
+<pre><code>## 
+##  F test to compare two variances
+## 
+## data:  Site1 and Site3 
+## F = 0.2654, num df = 25, denom df = 7, p-value = 0.01276
+## alternative hypothesis: true ratio of variances is not equal to 1 
+## 95 percent confidence interval:
+##  0.06026 0.75588 
+## sample estimates:
+## ratio of variances 
+##             0.2654 
+## 
+</code></pre>
+
+<pre><code class="r">var.test(Site1, Site2)
+</code></pre>
+
+<pre><code>## 
+##  F test to compare two variances
+## 
+## data:  Site1 and Site2 
+## F = 0.7836, num df = 25, denom df = 24, p-value = 0.5487
+## alternative hypothesis: true ratio of variances is not equal to 1 
+## 95 percent confidence interval:
+##  0.3471 1.7571 
+## sample estimates:
+## ratio of variances 
+##             0.7836 
+## 
+</code></pre>
+
+<p>Testing for differences in variance can be interesting in itself. There is no reason why we are only looking at differences between mean. We may also want to know if the shell lengths are more or less variable at one site or another. This may have important ecological implications. Here is appears that there is a significant difference in the variability of the shell lengths between sites 1 and 3, but not between sites 1 and 2.</p>
+
+<h3>Tests and confidence intervals</h3>
+
+<p>If you looked at the output from tests you should have seen that in addition to the p-value from the test R also provides confidence intervals for the difference between the means. The confidence interval is almost always more useful than the p-value alone. The test for significance simply tells us that there is a difference that is not attributable simply to chance variation (if all the assumptions are met). The confidence interval shows the possible size of the difference together with a measure of our uncertainty. If a 95% confidence interval includes zero then the p-value will not be significant. If the limits of the confidence interval approach zero then the p-value will be just below 0.05. If the confidence interval is far from zero then the p-value will be vanishingly small. So the confidence interval includes information regarding statistical significance.</p>
+
+<p>If sample sizes are very large we can find significant differences even when these differences are in fact very small, or even meaningless within the context of the study. In many cases we expect to find a difference, so the p-value tells us nothing we didn&#39;t already know. However, we may not know how large the difference is going to be. So you should always report confidence intervals where possible. In fact you should do a lot more than this when analysing your data fully. Good visualisation and diagnostics are essential. We will come on to these aspects as the course progresses. </p>
+
+<h3>Unpaired t-tests in SPSS</h3>
+
+<ul>
+<li> The test we have run is for independent samples (unpaired). We will look at paired t-tests for situations when the samples are not independent later in the course. We have to choose the right option from the SPSS menu.</li>
+<li> Site is considered a grouping factor. So we need to define the groups we are going to test against each other.</li>
+</ul>
+
+<p><img src="data:image/png;base64,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" alt="alt text"/></p>
+
+<ul>
+<li> The SPSS output includes the results for a test which assumes homogeneity of variance. It also includes Levene&#39;s test for homogeneity of variance. This should usually lead to the same conclusion as the F test we ran in R. The idea is that if Levene&#39;s test is not significant you can use the traditional method that assumes equality of variances. If Levene&#39;s test is significant you report Welch&#39;s test (as in R). However the two tests do not really differ if the assumptions of the first are met, while the first test should never be used when its assumptions are violated. So in fact this is all unnecessary and confusing. The best advice is to\textbf{ always use Welch&#39;s test }(the second row in the lower table of SPSS output). That way you can&#39;t go wrong.</li>
+</ul>
+
+<p><img src="data:image/png;base64,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" alt="alt text"/></p>
+
+<h3>Using hypothesis tests wisely</h3>
+
+<p>Hypothesis testing is a powerful tool that allows you to produce formally defensible statements regarding your data. A good dissertation must include formal tests of all the hypotheses of interest. At the same time, statistical hypothesis testing can be one of the most misunderstood aspects of statistical analysis. The difficulty seems to arise when the limited goals of a statistical hypothesis testing are equated as a direct test of the broader scientific hypothesis that is really of interest. Well designed manipulative experiments can turn a statistical hypothesis test into a test of a scientific hypothesis. Unfortunately in ecological situations we are often analysing data derived from observations and surveys rather than carefully controlled experiments. In these situations the connection between the statistical hypothesis and the scientific hypothesis is usually less direct. Answering ecological questions using the available data often require running a series of statistical hypothesis tests together with more detailed quantitative analysis that extracts effect sizes and functional forms of relationships from the data. You will learn more about this next term. However these quotations from Dytham and Zuur set the scene and reinforce the point that ecological data analysis is always challenging.</p>
+
+<p>Dytham on The art of choosing a test&#39;&#39;<br/>
+<em>It may be a surprising revelation, but choosing a statistical test is not an exact science. There is nearly always scope for considerable choice and many decisions will be made based on personal judgements, experience with similar problems or just a simple hunch. In several years of teaching statistics to biology students it is clear to me that most students don’t really care how or why the test works. They do care a great deal that they are using an appropriate test and interpreting the results properly.</em>(Dytham 2011)</p>
+
+<p>Zuur on Which test should I apply?}&#39;&#39; <br/>
+<em>During the many years of working with ecologists, biologists and other environmental scientists, this is probably the question that the authors of this book hear the most often. The answer is always the same and along the lines of &#39;What are your underlying questions?&#39;, &#39;What do you want to show?&#39;. The answers to these questions provide the starting point for a detailed discussion on the ecological background and purpose of the study. This then gives the basis for deciding on the most appropriate analytical approach. Therefore, a better starting point for an ecologist is to avoid the phrase &#39;test&#39; and think in terms of &#39;analysis&#39;. A test refers to something simple and unified that gives a clear answer in the form of a p-value: something rarely appropriate for ecological data. In practise, one has to apply a data exploration, check assumptions, validate the models, perhaps apply a series of methods, and most importantly, interpret the results in terms of the underlying ecology and the ecological questions being investigated.</em>(Zuur, Ieno and Smith, 2007).</p>
+
+<p>Dytham is correct in stating that most students don&#39;t care how a test works. Many useful procedures involve quite advanced mathematics. Most ecological researchers do not fully understand how complex multivariate methods work&#39;&#39; either, although they should always understand the concepts underlying them. It is quite wrong to assume that no statistical understanding is required to choose an analysis. In my experience it is impossible to select any analysis without having at least an intuitive notion of the underlying statistical mechanisms. Zuur&#39;s emphasis on <strong>analysis</strong> rather than <strong>testing</strong> alone is a result of experience with large data sets and complex ecological questions. </p>
+
+<p>The simple &quot;classical&rdquo;&ldquo; hypothesis tests that are emphasised in Dytham&#39;s book are most useful for answering questions with relatively small data sets. They are a good starting point for developing skills in quantitative analysis. In some cases they may be all you need. However note this warning from Dytham A common tendency is to force the data from your experiment into a test you are familiar with even if it is not the best method&#39;&#39;. In other words, if all you have is a hammer every problem looks like a nail. </p>
+
+<h3>Exercises</h3>
+
+<ol>
+<li><p>Test for differences in mean shell length between sites 3 and 4 and sites 4 and 5 using R and SPSS. What can you conclude from each of these tests? What are the assumptions made for the tests? How does the sample size vary between sites? Is this important, and if so why? Can you think of some additional issues involved in drawing inference from a data set using separate t-tests <em>(If you can&#39;t, don&#39;t worry about it. All will be revealed when we look at one way analysis of variance.)</em></p></li>
+<li><p>Can you work out how to test whether mean June rainfall is significantly&#39;&#39; different to mean July rainfall using the data set we saw before?</p></li>
+</ol>
+
+<pre><code class="r">rain &lt;- read.csv(&quot;http://tinyurl.com/QEcol2013/Rainfall.csv&quot;)
+str(rain)
+</code></pre>
+
+<pre><code>## &#39;data.frame&#39;:    103 obs. of  18 variables:
+##  $ Year: int  1910 1911 1912 1913 1914 1915 1916 1917 1918 1919 ...
+##  $ JAN : num  82.9 38.4 99.8 110.5 43 ...
+##  $ FEB : num  98.5 57.6 57.3 32.1 76.7 ...
+##  $ MAR : num  26.8 55.8 108.6 98.1 105.3 ...
+##  $ APR : num  63.5 44 7.8 89.4 30.5 33.3 42.1 52.1 55.9 59.5 ...
+##  $ MAY : num  64.2 36.6 55.8 61.9 42.7 61.2 64.4 56.3 53.3 25.2 ...
+##  $ JUN : num  64.6 73 116.2 34.6 55.3 ...
+##  $ JUL : num  79.8 13.2 90.7 32.5 89.4 ...
+##  $ AUG : num  100.8 50.3 170.5 39.4 55.7 ...
+##  $ SEP : num  15.7 56.2 49.5 59.3 43.6 ...
+##  $ OCT : num  86.7 83.2 90.5 95.6 61.6 ...
+##  $ NOV : num  109.9 104 69.1 82.8 102.9 ...
+##  $ DEC : num  124.6 160.1 102 49.2 179 ...
+##  $ WIN : num  NA 221 317 244 169 ...
+##  $ SPR : num  154 136 172 249 178 ...
+##  $ SUM : num  245 137 377 106 200 ...
+##  $ AUT : num  212 244 209 238 208 ...
+##  $ ANN : num  918 773 1018 785 886 ...
+</code></pre>
+
+<p>What would this test actually tell you? How useful is the test result alone? How could you make the analysis more informative?</p>
+
+</body>
+
+</html>
+
