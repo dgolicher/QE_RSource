@@ -1,0 +1,605 @@
+# Class 2: Data structures and an introduction to R 
+
+## Introduction
+
+Dytham's book provides a lot of guidance on choosing the right test. Later in this course we will see how important it is to explore your data carefully and carry out diagnostic tests in order to fully justify your choice of analysis. A full analysis is much more than just a statistical test. However the number of possible procedures that you can use is always determined by the structure of your data. If you understand data structures you can usually choose and run the right analysis. If you do not consider the basic properties of your data then not only will you not know which analysis to use, but you will probably not even be able to import the data into the software in order to run it!
+
+Correctly structured data can be imported into any statistical software. There is not one data format for SPSS, one for R and yet another for Minitab, SAS or whatever. They all follow exactly the same rules. There can be some differences in the way programs store data as binary files, but that is a matter that the software itself deals with when importing and exporting data. So, in order to use any statistical software you must follow some simple, but essential, rules regarding data format.
+
+You can find out about these rules at the same time as you begin learning to use R. Because R is a programing language it is very good at carrying out Dytham's suggestion of ``making up approximate values''. By forming some data from first principles you will get a better feel for the types of data that are possible and understand how this influences the sort of analysis that you can run.
+
+
+## Starting R
+
+For these exercises you just need the basic R console. If you haven't already done so you can install this on your own laptop from the Comprehensive R Archive Network (CRAN) for free. Just download the windows binary from the download page. I will explain how to extend R with packages and how to produce formatted output using RStudio later.
+
+Run R to get the plain console interface with a > prompt waiting for your input. 
+
+The first thing to be aware of before starting is that R uses typed commands to produce results. Commands have to be entered  . It is particularly important to be aware that R is case sensitive. So while typing ``plot(data)'' will get results (if you have loaded some data called data) writing ``Plot(data)'' or ``PLOT(data)'' or ``plot(Data)'' will not. You can cut and paste from the document, but you will learn more if you try typing commands yourself. Don't just copy blindly. Aim to understand what each command is doing before you type it.
+
+The second ``gotcha'' for beginners occurs if you do not fully complete a command as shown. The console then shows a + sign as it is waiting for the rest of the command. You must either complete the command correctly to get back the prompt or press the escape key to start again. You could also use the stop button at the top of the console ![alt text](/primerfigs/stop.png}
+
+So now that you are aware of these potential pitfalls you can get started. 
+
+This document has been produced by ``knitting'' R code with text. So all the commands that you see in the grey boxes have been tested and will produce the output that you see. In the document output is distinguished from commands by  ##. Single  # signs represent comments in the code.
+
+ 
+```{r,echo=FALSE} 
+set.seed(1)
+```
+
+If you type some simple maths into the console R will work as a calculator. It is worth knowing that the up and down arrow keys can be used to flip back to repeat commands that you typed previously. 
+
+```{r}
+1+1
+```
+
+The reason that you see a [1] in the output is that R often will output a long list of numbers and prints an index alongside to help show you where you are.
+
+Experiment some more. For example ..
+
+```{r}
+5*10
+12/4
+3^2
+```
+
+There is a lot more maths functionality built into the R language that you can find out about as you go on. However to follow the primer you do not need to learn any more commands than are shown in this document. 
+
+Note that when you type maths in the console the output is just printed to the screen. This is not stored anywhere in the computer's memory. So we need to bring in the concept of data objects. A data object ``holds'' the numbers and can be manipulated by commands. This is how R manages to run analyses on your data. When you import a file containing data it will be stored into a data object. 
+
+The simplest data object is a variable. If a variable only contains one number it is known formally as a scalar. A variable with many numbers is a vector. So let's assign a single value to a variable to form a scalar. We do that in R using the <- operator which is typed as a combination of the less than sign < with a horizontal bar -.
+
+```{r}
+x<-5
+```
+
+Nothing appears to have happened! However you now have your first data object, a scalar called x. This is stored in memory. So try this.
+
+```{r}
+x*2
+```
+
+Notice that this would not have worked if you had typed X*2 as R is case sensitive.
+
+So, how do we form a vector with multiple values? When you are analysing your own data the answer is that you usually won't need to. You import all the values from a file. But if you wish to form a vector in the console you must use the concatenation operator ``c''. So this gives the variable x a series of values.
+
+```{r}
+x<-c(1,4,5,9,10,11,12,34,56,67,100,123,45)
+```
+
+Now see what happens if you type 
+
+```{r}
+x*2
+```
+
+You can carry out any sort of mathematical operation that involves x and all the values in the vector will be used. Notice that the results are just printed out to the console and lost.
+
+If you want to assign the results to a new variable you use the ``<-'' operator again. This is a very common practice when analysing data. So, say you are intending to work with the natural logarithm of x you might write.
+
+```{r}
+logx<-log(x)
+```
+
+You can see that this has worked by writing the new variable name so that R prints out the contents to the console.
+
+```{r}
+logx
+```
+
+This time you can see more clearly the purpose of the indices in the output. The second line starts with the 12th number in the vector.
+
+You can find the names of the data objects that are held in memory by typing ls(). 
+
+```{r}
+ls()
+```
+
+
+### Data structures
+
+Now, as promised, we can begin looking at data structures. You can ask R to tell you about the structure of any object that it has in memory by typing str().
+
+```{r}
+str(x)
+str(logx)
+```
+
+So R has told us that both x and logx are   the numbers in the vector to understand its structure. If you have a lot of data you probably do not want to look at all of it at once.
+
+How does this relate to choosing an analysis? We have seen that this particular variable contains numbers. However in statistical analysis we also use ``variables'' that don't consist of numbers. They vary in another respect. If you look at any introductory statistical textbook you will see a chapter that defines types of variables in terms of interval, ordinal and scale variables and nominal and ordinal variables. All these distinctions can be important when choosing an analysis. However by far the biggest distinction is between   by R and many other statistical programs.
+
+The sort of analysis that you will be able to run is determined by the sort of variable, or combination of variables, that you are working with.
+
+Let's set up a categorical variable. Experienced users of R often want to replicate values in order to set up some test data as Dytham suggests. So R has a range of functions for making data. The rep function replicates the values.
+
+```{r}
+gender<-rep(c("Male","Female"),each=10)
+gender
+```
+
+Now if we ask R about the data structure it will tell us that we have a character vector.
+
+```{r}
+str(gender)
+```
+
+I have just said that in statistics categorical variables are referred to as factors. Factors are special character vectors with numbered levels. Later you will see that R automatically assumes that any column in a data file that contains non numeric values is a factor and converts the data to that form. In this case we need to tell R to turn the character vector into a factor.
+
+```{r}
+gender<-as.factor(gender)
+str(gender)
+```
+
+Now R tells us that gender is a factor with two levels. There is no intrinsic order to the levels. R places them in alphabetical order by default. The important element to be aware of is that gender   a variable. It varies in a known and specific way (it has two levels), but it is a variable all the same. You cannot calculate means, medians, standard deviations or any similar summary statistics using a factor. However you can, and will, use them together with numerical variables in many types of analysis.
+
+Let's produce a numerical variable to go alongside this. In the UK the mean height of men is around 176 cm and women 164 cm. So we could produce a vector with these values using this code.
+
+```{r}
+height<-rep(c(176,164),each=10)
+height
+str(height)
+```
+
+So now we have another numerical variable. However if we really carried out a survey of people's heights we would be amazed if we got data like this. Although the numbers represent a good estimate of the expected value for each of the ten men and women we know from experience that people's heights vary around this value. In fact they vary quite a lot. The standard deviation is around 6cm.
+
+Knowing this we can now make our variable more realistic by adding in some simulated values taken from a normal deviation with this standard deviation.
+
+```{r}
+height<-height+rnorm(20,sd=6)
+height
+```
+
+Now we have two variables that are held in R's memory. We are assuming that they both form part of a simulated data set that we could have obtained if we had measured a stratified random sample of twenty students consisting of ten men and ten women. Let's call the survey ``hsurvey'' and make what is known as a data frame to hold the results.
+
+```{r}
+hsurvey<-data.frame(gender,height)
+str(hsurvey)
+```
+
+A data frame is the basis of almost all statistical analysis. It consists of two or more columns that line up in such a way that the measurements or observations recorded have been taken from the same individual member of a sample. This is often equivalent to a single sheet in a spreadsheet. R tells us that we have one factor and one numerical variable in this case. We might have measured many other variables at the same time and produced a much wider set of data. These may have been either categorical or numerical. Providing that they all ``line up'' and correspond to the same individual we have our data frame. Many standard statistical techniques use two variables together. Later on in the course you will see how we can analyse data consisting of more than two variables using multivariate analysis.
+
+The complete data frame is shown below.
+
+```{r,results='asis',echo=FALSE}
+library(xtable)
+print(
+xtable(hsurvey),"html")
+```
+
+If you want to edit the data directly in R, or see the data in a spreadsheet like format type.
+
+```{r,eval=FALSE}
+fix(hsurvey)
+```
+
+Be careful after you have done this to close the data editor in order to return control to the console. You cannot have both open at once. If you are not yet used to the concept of data objects it can be very reassuring to see that all the data is really there in memory, just as in a spreadsheet, by using this function. However large data sets are easier to understand using str in combination with the methods for data visualisation and summarising data that you will learn in this course.
+
+If you want to remove all the other variables you set up from memory and leave just the data frame you could type.
+
+```{r}
+remove(x,logx,height,gender)
+ls()
+```
+
+Now if we ask R to print height or gender it will not find them. They have been placed within the data frame.
+
+```{r}
+height
+gender
+```
+
+We can refer to the variables by writing out the full name of the data frame and the variable we want, separated by \$
+
+```{r}
+hsurvey$height
+hsurvey$gender
+```
+
+Or we can ``attach'' the data frame. This makes the variables available directly. Notice that if we have several data frames containing variables with the same name this could cause confusion.
+
+```{r}
+attach(hsurvey)
+height
+gender
+```
+
+
+### Saving and loading data frames
+
+Now that we have made up some data we might want to save it in the format that we will eventually use to capture our real data. The simplest, most portable data format is a CSV (Comma Separated Variable) file. Such a file can be easily read by all software. 
+
+First we must find a place to store the data. The standard practice is to make a separate data directory (folder) for each analysis that you carry out. You then set this as the working directory using the menu options in the R console.
+
+ 
+![alt text](primerfigs/change.png)
+ 
+
+Now set the working directory to an appropriate folder.
+
+ 
+![alt text](primerfigs/change1.png)
+ 
+
+Once you have set your working directory (which could be on a USB stick for portability) you can save the data that is held in memory using an R command.
+
+```{r}
+write.csv(hsurvey,file="hsurvey.csv",row.names=FALSE)
+```
+
+The command has three elements. The first is the name of the data frame that you wish to save. This is not quoted. The second is the name of the file into which you are going to save the data. The third tells R not to add row names to the file (these are not usually necessary).
+
+This all seems a bit odd if you are used to clicking on a menu to save the file. The logic behind this becomes apparent when you have used R for a while. The big advantage of R is that all the steps are documented. This means that the whole analysis can be reproduced by anyone, including reading and writing the data.
+
+We will see what can be done with data in this format as the course progresses. The take home message from this class is that categorical variables are still variables. They must ``line up'' with numerical variables in order to form a proper data frame. Data frames are the standard input to all statistical analysis and are of a consistent form. Many different sorts of data summaries and tables can be generated from a data frame quickly by statistical software.
+
+You can check the working directory using this command.
+
+```{r}
+getwd()
+#In my case I am running R on Linux so the paths look different to Windows
+```
+
+To see a list of files in the directory type dir()
+
+```{r,eval=FALSE}
+dir()
+##[1] hsurvey.csv
+``` 
+
+If we remove the dataframe we formed we will be left with nothing in R's memory
+
+```{r}
+remove(hsurvey)
+ls()
+```
+
+To load it back from the file type
+
+```{r}
+hsurvey<-read.csv("hsurvey.csv")
+str(hsurvey)
+```
+
+
+### Reading from the internet
+
+A very nice feature of R is the way data can be read from the web. I have setup a ``tinyurl'' for this course to point to a dropbox folder containing all the data that we will be using. So the link
+
+ 
+
+will provide direct access to the hsurvey.csv file that I have placed in my data repository. You may have to set up your browser to download files with a csv suffix rather than as opening them as text if you want to download the data to a file. 
+
+This is all part of the ``reproducible research'' philosophy. For example, let's remove the hsurvey data from memory and then load it back in again, this time from the file I have copied onto the web site.
+
+```{r}
+remove(hsurvey)
+ls()
+```
+
+Provided you are online you can load it back from my data repository by pasting the annotated code shown below into the R console. This will also produce Figure 1 automatically using the data stored online. Notice that the code is annotated with lines that start with \#. These lines are not run, but they can be included in a script to tell the person receiving the code what is going on.
+
+
+```{r}
+#The first line will read in the data
+
+hsurvey<-read.csv("http://tinyurl.com/QEcol2013/hsurvey.csv")
+
+#Now let's look at the height distribution as a pair of histograms using the lattice package that is bundled with R
+
+library(lattice)
+histogram(~height|gender,col="grey",layout=c(1,2),data=hsurvey,nint=10)
+```
+
+
+So, someone who is sent this code by email can now reproduce the figure exactly. If they know about R they can adapt the figure themselves. They also will have loaded the data that produced it ready to carry out more analysis. This is a very powerful way for researchers to collaborate together to solve problems with data analysis.
+
+
+### Saving a workspace
+
+When you exit R you are asked if you want to save the current workspace. If you do this R will place two files in the working directory. One contains the data that was loaded in R at the time (in binary format) and the other is a list of all the commands that you have run (the RHistory). In windows you should notice an R icon in the working directory if you browse to it. Clicking on this will open R and restore the R session. This can be useful if you want to pick up where you left off without rerunning code. However be careful to remember that you already have some objects loaded. If they have the same names as new data that you load then you could become confused. To remove all the data objects and start again type.
+
+```{r}
+remove(list=ls())
+```
+
+
+#### Installing packages
+
+Many of the more advanced features of R have been implemented within add on packages. These are held online at numerous mirror sites throughout the world. Packages are what makes R the important research tool that it is. Notice that the top articles from Methods in Ecology and Evolution present recently built R packages.
+
+ 
+
+In order to use packages you have to install them to your hard disk. You do this once, and need to be online in order to download them. Once installed you make a package available at the start of a session using the command ``library''. All the most useful packages have been installed already on the PCs in the lab. You may want to add some packages to your laptop. This can be done either using the menu options at the top of the console or by writing a command (if you know the names of the packages you need).
+
+For example the following line will install the package vegan. This provides access to a large range of useful methods for analysing biodiversity and community data.
+
+```{r}
+install.packages("vegan")
+```
+
+Once installed you can use vegan by typing
+
+```{r}
+library(vegan)
+```
+
+During the course I will tell you which packages are most useful, and what they are useful for. I will also show you how to get help on functions in order to work independently. For now, just be aware that if R tells you that ``there is no package called vegan'' if you type ``library(vegan)'' it means that the package has not yet been downloaded. You would then need to install it first.
+
+
+## Using SPSS
+
+It is quite simple to move data from R into SPSS. The two programs can therefore be used side by side.
+
+
+### Importing a CSV file into SPSS
+
+Most researchers do not capture data directly in SPSS format. Spreadsheets are often the primary data capture and storage software. Now that you are aware that the raw data should follow the standard data frame format you can easily export data from Excel or Libre Office Calc as a csv file containing a data frame. This is the form needed for SPSS.
+
+Data import into SPSS is slightly more time consuming than import to R. 
+
+Select import text file and find the file. Notice that you may need to change the option to all files in order to find the csv suffix.
+
+ 
+![alt text](primerfigs/import.png)
+ 
+
+Make sure that you tell SPSS that variable names are included at the top.
+
+ 
+![alt text](primerfigs/import1.png)
+ 
+
+And that commas are used to delimit the columns.
+
+ 
+![alt text](primerfigs/import2.png)
+ 
+
+The defaults should do all the rest.
+
+Now if you look at the variables view you will see that SPSS has interpreted gender as a string (equivalent to character) and height as numeric. You may want to set the measurement attribute to ``scale'' for height in order to have a correct definition, although this does not usually affect the analysis. SPSS is not as consistent as R when importing data and it can be necessary sometimes to recode strings as labelled numerical variables for some analyses. You should not need to do this for the simple analyses shown in the primer.
+
+Data saved in the SPSS ``{*}.sav'' format can be read into R using the foreign package and the read.spss() command. We will not do that here, but it is worth realising that there is nothing at all to stop you from opening the same data in both SPSS and R and then using the features of each program that is most convenient in order to get the results you need. This is essentially rather like having an R plugin to SPSS, or vice versa.
+
+
+## Set reading
+
+Crawley (2007) Chapter 2 on data frames. Note that Crawley keeps data in tab delimited form rather than csv. This is also common and is just as easily read into either R (using read.table as shown in the text) or SPSS.
+
+You should also take a little time this week to experiment with R. 
+
+
+## Additional R commands
+
+This section shows a few more useful features of R. You do not need to work through all of them at this stage. To complete the primer you only need to follow the instructions provided. However it is worth having a look at some more commands in order to get a general feel for the way R works.
+
+If you type 
+
+```{r}
+x<-scan()
+```
+
+
+You can enter numbers one by one until you press ``enter'' twice in a row to exit.
+
+
+#### Not a number, not available and infinity
+
+What happens when a result is not possible? R has several codes for this.
+
+```{r}
+sqrt(-1)
+log(0)
+1/0
+```
+
+When data is loaded the code NA (not available) is used for missing data.
+
+
+#### More vector functions
+
+As we have seen functions act on the whole vector at once. This applies also to functions that return only one number as a result. 
+
+```{r}
+x<-c(1,3,5,7,4,2,7)
+sum(x)
+mean(x)
+length(x)
+var(x)
+sd(x)
+```
+
+It is very important to realise that a vector with NA values can cause problems for these sorts of functions. You need to tell R explicitly to remove the NAs. If not the result itself will be an NA. For example.
+
+```{r}
+x<-c(1,2,3,4,5,6)
+mean(x)
+x<-c(1,2,3,4,5,NA)
+mean(x)
+mean(x,na.rm=T)
+```
+
+This is a very common pitfall for beginners. In general, if something does not work as you expect look for NAs!
+
+
+### Generating sequences of numbers in R
+
+One of the most useful features of R is the ease with which you can generate sequences of numbers and simulated data sets. To produce a sequence you can use the : syntax.
+
+```{r}
+x<-0:100
+0:100
+x<-30:10
+x
+```
+
+A longer but more flexible way of producing a sequence is with seq. For example to produce even numbers between 0 and 100.
+
+```{r}
+x<-seq(0,100,by=2)
+x
+```
+
+Say we know the length of the sequence we want but have not worked out the intervals. 
+
+```{r}
+x<-seq(0,100,length=23) 
+x
+```
+
+
+#### Using rep to replicate a vector
+
+If we want ten copies of the same vector one after the other we can use.
+
+```{r}
+x<-rep(c(1,4,9,23),times=10) 
+x
+```
+
+However we might want each number in the vector replicated ten times before moving to the next. In this case we use each instead of times.
+
+```{r}
+x<-rep(c(1,4,9,23),each=10)
+x
+```
+
+
+#### Replicating text
+
+When designing a format to hold the results from a planned experiment or field survey it can be very useful to generate replicated sequences of text for the factor levels or grouping variables. This is also very easy.
+
+```{r}
+x<-rep(c("Control","Treatment1","Treatment2"),each=10)
+x
+```
+
+Or of course
+
+```{r}
+x<-rep(c("Control","Treatment1","Treatment2"),times=10)
+x
+```
+
+
+#### Numerical vectors, character vectors and factors
+
+R makes an important destinction between character vectors, which are simply a set of strings, and factors. Factors, or grouping variables, are an essential element in statistical analysis. R holds factors as a series of named levels. You can make a factor from a character vector by using as.factor. When data is read in R usually assumes that character vectors are factors unless you say otherwise.
+
+```{r}
+str(x)
+x<-as.factor(x)
+str(x)
+x<-as.numeric(x)
+x
+```
+
+
+### Logical vectors and subsetting
+
+I cannot stress enough that the key to using R efficiently is the concept of logical vectors, indices and subsetting. However the concept does take a little effort to get used to. Let's take it a step at a time. Say we have a vector x which we have setup like this.
+
+```{r}
+x<-seq(-4,10,by=2)
+x<-rep(x,times=3)
+x
+```
+
+Now we can ask a question that will be answered as true or false for each of the numbers. Is the element of x greater than zero?
+
+```{r}
+x>0
+```
+
+R replies with a vector stating whether the result is true or false. We can also ask which of the numbers is greater than zero.
+
+```{r}
+which(x>0)
+```
+
+Now R replies with the indices of the elements of the vector.
+
+Subsetting the vector involves the use of the square brackets {[} and {]}. If you include either a logical vector with TRUE and FALSE values or numeric indices within the square brackets R will subset the vector. Either way works.
+
+```{r}
+x[x>0]
+x[which(x>0)]
+```
+
+When we move on to handling more than one variable at a time using data frames we will see that the same concept can be used to subset whole blocks of data.It is a very powerful and fundamentally simple way of manipulating data.
+
+A more complex example is given here. This takes every second member of x using a sequence of indices as a subset.
+
+```{r}
+x[seq(2,length(x),by=2)]
+```
+
+Could you follow how this worked? Working outwards
+ 
+*  length(x) gives the number of elements in x. Lets call this n
+*  seq(0,length(x),by=2) gives the vector of indices 2,4,6,....n.
+*  A subset of x is found using the square brackets.
+ 
+With experience it is common to wrap up several steps in a single line. There is nothing wrong with explicitly writing
+
+```{r}
+n<-length(x)
+ind<-seq(2,n,by=2)
+x[ind]
+```
+
+
+#### Sorting and ordering
+
+We can also sort vectors. There are two ways of doing this. The first is very direct, but I really do not recommend it. It uses the sort command with the argument decreasing=TRUE or FALSE
+
+```{r}
+sort(x,decreasing=T)
+```
+
+That's simple enough. However it is much better practice in the long run to use order. This needs a little explaining, again we will take it step by step.
+
+```{r}
+order(x,decreasing=T)
+```
+
+Order has not given us the numbers in order! But of course it should not, as sort does that. Instead order has given us the the indices in order. Notice that if there are ties, as in this case, R respects the original order for the tied numbers. So how can we use order to sort the vector? If you have followed the logic of using indices to refer to elements of a vector you might have guessed.
+
+```{r}
+x[order(x,decreasing=T)]
+```
+
+Although this involves more typing than simply writing sort, it is more powerful. The power comes from the way indices can be used with many variables at once. When we move on to see data frames this will be clearer. For the moment look at this simple example to see the logic.
+
+```{r}
+x<-c(1,3,2,4)
+y<-c("A","B","C","D")
+y[order(x,decreasing=F)]
+```
+
+
+
+#### Ranks
+
+Finding ranks is a very common procedure in statistics. This is a slightly different problem. We need a way to deal with ties, and there is more than one solution to the problem.
+
+```{r}
+x<-c(1,1,2,3,4,5,5)
+rank(x,ties="average")
+rank(x,ties="max")
+rank(x,ties="min")
+```
+
+The last example coincides with the familiar ranks given in sports (joint gold medal followed by the bronze). Notice that there is no decreasing argument to ranks. The lowest numbers take the lowest ranks. If you really want to rank performance scores you must reverse them first by, say, subtracting all the scores from the maximum possible.
+
+```{r}
+x<-c(1,1,2,3,4,5,5)
+rank(max(x)-x,ties="min") 
+```
+
+ 
+![alt text](primerfigs/keepcalm.png)
+ 
+ 

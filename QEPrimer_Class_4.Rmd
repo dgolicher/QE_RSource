@@ -1,0 +1,228 @@
+# Class 4: Confidence intervals for univariate data
+
+## Set reading for this class
+
+Crawley chapters four and five.
+
+**What you must remember before next term**
+ 
+*  How to calculate a standard error
+*  The difference between the standard error and the standard deviation
+*  The concept underlying the sampling distribution of the mean
+*  The use of the t-distribution for small (n<30) samples
+*  How to calculate a confidence interval
+ 
+ **What you will look at in greater depth on the course**
+ 
+*  The logic underlying statistical inference from samples
+*  The relationship between confidence intervals, hypothesis tests and statistical models
+*  The interpretation of confidence intervals
+*  Diagnostics for confidence interval calculations
+*  Confidence intervals for non-normal data  
+
+### Calculating the standard error
+
+In the last class you calculated the standard deviation, step by step. Load and attach the data you were working with, if you have not already done so by reloading the R workspace%
+*Note that if you reload data or attach the same data twice you will be warned by R. This will not usually cause a problem, but you should be aware that if the data are different there may be the potential for ambiguity. Be careful*
+
+ 
+```{r}
+d<-read.csv("http://tinyurl.com/QEcol2013/Mussels.csv")
+attach(d)
+```
+
+
+The standard deviation summarises the variability in the data (the deviations from the mean) in one single value. This can be very useful for descriptive purposes.
+
+A rather more subtle concept is the standard error. The subtlety arises because the standard error is used for inference. Remember that statistical inference involves estimating some properties of the population from which our sample has been drawn. The standard error (of the mean) provides us with information regarding the confidence we can place on the estimate of the population mean.
+
+The standard error is very easily calculated if we have the sample standard deviation. It is simply the standard deviation divided by the square root of the sample size.
+
+$SE_{\tilde{x}}=\frac{s}{\sqrt{n}}$
+
+```{r}
+n<-length(Lshell)
+se<-sd(Lshell)/sqrt(n)
+se
+```
+
+
+However the interpretation of the standard error is more subtle. The standard error is based on the concept of the sampling distribution. It is in effect the standard deviation of the distribution of the means we would get if we continually drew samples from a target population. 
+
+
+### The sampling distribution of the mean
+
+The sampling distribution of the mean is the distribution that you would obtain if you took a large number of samples of the same size as the one you actually obtained and looked at the distribution of all the mean values.
+
+To make this clearer let's try a simple experiment.
+
+In R we can draw random samples from a column of data easily. Lets take a sample of 10 mussel shells at random, look at their lengths and calculate the mean.
+
+```{r}
+samp<-sample(Lshell,10)
+samp
+mean(samp)
+
+```
+
+We could repeat this experiment many times. You could do it again by repeating the code.
+
+```{r}
+samp<-sample(Lshell,10)
+samp
+mean(samp)
+```
+
+You can see that the result is not the same, as the sample was taken at random.
+
+We can tell R to take 1000 samples like this from the original vector, calculate the mean from each and then look at the distribution of all the resulting thousand values. This would simulate the spread in values for the mean that we would obtain if we carried out a lot of small surveys that took only 10 mussel shells from the same population
+
+
+```{r}
+resamp<-replicate(1000,mean(sample(Lshell,10)))
+hist(resamp,breaks=20,xlim=c(90,120),main="Sampling distribution of the means of 10 shells")
+```
+
+
+Now if we draw samples of 30 shells instead of 10 and calculate the mean for each, what would we expect? Let's try this and plot the result.
+
+```{r}
+resamp<-replicate(1000,mean(sample(Lshell,30)))
+hist(resamp,breaks=25,xlim=c(90,120),main="Sampling distribution of the means of 30 shells")
+```
+
+
+A sample size of 50 should reduce the spread of mean values still further. 
+
+```{r}
+resamp<-replicate(1000,mean(sample(Lshell,50)))
+hist(resamp,breaks=40,xlim=c(90,120),main="Sampling distribution of the means of 50 shells")
+```
+
+
+Notice that in all cases the histogram suggests a symmetrical, normal distribution. The distribution becomes narrower as the sample size increases.
+
+So the outcome of all this is to demonstrate that the standard error is a manner of formalising this so called ``sampling'' process mathematically. It provides a measure of the confidence we have in an estimate of the mean value calculated from our sample. 
+
+For large samples, a 95\% confidence interval for the mean is produced by multiplying the standard error by approximately 2 (the precise value is 1.96 for infinitely large samples). We expect the true mean for the population to fall within this interval 95\% of the time. Notice that this is not a measure of variability (there is only one true mean). It is an estimate of a parameter expressed with uncertainty. So there is a very important distinction between the standard deviation and the standard error. 
+
+We can reduce the standard error by increasing the sample size, as we divide by the square root of n. However we can't reduce the standard deviation by drawing a larger sample. The sd is a measure of the natural variability which is always present. All that happens to the standard deviation when we take a small sample is that we have a worse estimate of it, as the differences between individuals may vary randomly depending on which we happen to pick. 
+
+Recall the way we simulated some artificial data in R. To get each simulated height we used the mean + the simulated variability with known standard deviation
+
+```{r}
+mean<-176 #This is the "expected value" for the population
+variability<-rnorm(1,sd=6) #Each measurement will differ from the mean
+height<-mean+variability #The values we get are a combination of the two
+```
+
+The intrinsic variability is often referred to as the ``error'' in statistics, but it this is not necessarily an error in the colloquial sense of a mistaken measurement. The true population mean is fixed, it does not vary. However our estimate of it does, unless we measure every individual in the population. We draw inferences about it from the sample. This is the basis of many classical statistical tests.
+
+
+### Calculating confidence intervals
+
+Whenever you see a standard error in the published literature remember that the rough rule of thumb is that two standard errors represent a 95\% confidence interval for the mean. However it is only a rough estimate. As samples become smaller you need to multiply the standard error by a larger value.
+
+Small sample (n<30) inference relies on the t distribution. The t-distribution is wider than the normal distribution and corrects for the fact that we have to estimate the population standard deviation from the sample.
+
+```{r,echo=FALSE}
+par(mfcol=c(2,2))
+f<-function(n){
+df<-n-1
+t<-qt(0.975,df)
+plot(function(x)dt(df=n-1,x),-4,4,main=paste(df,"degrees of freedom"),ylab="")
+xvals <- seq(-4,-t,length=50)
+dvals <- dt(xvals,df=n-1)
+polygon (c(xvals,rev(xvals)),c(rep(0,50),rev(dvals)),col="gray")
+xvals <- seq(4,t,length=50)
+dvals <- dt(xvals,df=n-1)
+polygon (c(xvals,rev(xvals)),c(rep(0,50),rev(dvals)),col="gray") 
+}
+f(100)
+f(30)
+f(10)
+f(4)
+
+```
+
+
+The t distribution becomes fatter as the sample size becomes smaller (degrees of freedom = n-1) so we need to multiply the SE by a larger value in order to obtain the same confidence interval. Notice that small samples therefore lead to a ``double whammy''. The SE is large because n is in the denominator when we calculate it from the sd, and the value for t is larger because we have a worse estimate of the standard deviation from the sample.
+
+So to get a 95\% confidence interval with a sample of size 10 we multiply the standard error by t as found by the R function below, instead of using 1.96 which would be the case for a large sample.
+
+```{r}
+t<-qt(0.975,10-1)
+t
+```
+
+This cuts off the tails of the t-distribution.
+
+To calculate a confidence interval step by step in order to illustrate the concept we need the following elements.
+
+```{r}
+SD<-sd(Lshell)
+SD
+Mean<-mean(Lshell)
+Mean
+n<-length(Lshell)
+n
+SE<-SD/sqrt(n)
+SE
+t<-qt(0.975,n-1)
+t
+```
+
+The confidence interval is then calculated using the standard error of the mean and the value for t that corresponds to the cut off point of the distribution.
+
+```{r}
+Mean-SE*t 
+Mean+SE*t 
+```
+
+**See Crawley, chapter 4 for more details.**
+
+To get a confidence interval in one step uning R we can run a one sample t-test.
+
+```{r}
+t.test(Lshell)
+```
+
+The output also shows the result of testing the null hypothesis that the true mean is actually zero. This is not a sensible test in this case but we can just ignore the ``test'' part of the output and look at the confidence interval that has been calculated for us.
+
+The code below also finds the confidence interval. It involves fitting a simple statistical model. You will see why this works later in the course.
+
+```{r}
+confint(lm(Lshell~1))
+```
+
+
+### Obtaining a confidence interval in SPSS}
+ 
+*  You can find the confidence interval for a single variable in SPSS by running a one sample t-test
+ 
+![alt text](primerfigs/spss9.png)
+ 
+*  As in R the output shows the result of testing the null hypothesis that the true mean is actually zero. You will see more about hypothesis testing in the next section. 
+ 
+![alt text](primerfigs/spss10.png)
+
+
+### Exercises}
+
+The following lines read in measurements on crow humerus lengths and makes them available for use in R after attaching the data frame. 
+
+```{r}
+d<-read.csv("http://tinyurl.com/QEcol2013/Crows.csv")
+attach(d)
+```
+
+The variable to work with is Gl. These are measurements of the overall length of the bones in mm.
+
+```{r}
+Gl
+```
+
+Produce simple boxplots and histograms in R. Calculate the mean, standard deviation, standard error and the 95\% confidence interval for the bone lengths. Import the data into SPSS and carry out the same operations.
+
+
+ 
